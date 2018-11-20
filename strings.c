@@ -1,3 +1,4 @@
+
 #define _POSIX_C_SOURCE 200809L // for getline
 
 #include <ctype.h>
@@ -65,6 +66,8 @@ strsplitv(char *string, char *delim)
     }
     while(pos != NULL);
 
+    if(i == 0) return NULL;
+
     array = (char**)calloc(i + 2, sizeof(char*));
 
     i = 0;
@@ -83,7 +86,6 @@ strsplitv(char *string, char *delim)
         }
     }
     while(pos != NULL);
-
 
     if(array[i] == NULL) array[i] = strdup(start);
 
@@ -117,6 +119,36 @@ strdupv(char **array, int limit)
     }
 
     return retval;
+}
+
+char**
+strcatv(char **array, char *string)
+{
+    int     i = 0;
+    char    **pos;
+
+    if(string == NULL) return array;
+
+    if(array == NULL)
+    {
+        array = (char **)calloc(2, sizeof(char *));
+        array[0] = strdup(string);
+
+        return array;
+    }
+
+    pos = array;
+    while(pos[0] != NULL)
+    {
+        i++;
+        pos++;
+    }
+
+    array = (char **)realloc(array, sizeof(char*) * (i + 1));
+    pos[0] = strdup(string);
+    pos[1] = '\0';
+
+    return array;
 }
 
 void
